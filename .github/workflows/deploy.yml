@@ -13,17 +13,27 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+        with:
+          persist-credentials: false
 
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 22
+          cache: 'npm'
 
       - name: Install Dependencies
         run: npm ci
 
       - name: Build
         run: npm run build
+
+      - name: Debug Build Output
+        run: |
+          echo "Listing dist directory contents:"
+          ls -la dist/
+          echo "Examining index.html:"
+          cat dist/index.html
 
       - name: Create .nojekyll file
         run: touch dist/.nojekyll
@@ -33,4 +43,6 @@ jobs:
         with:
           folder: dist
           branch: gh-pages
+          clean: true
+          single-commit: true
           token: ${{ secrets.GITHUB_TOKEN }}  # Use the built-in token

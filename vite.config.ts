@@ -1,22 +1,32 @@
 import { defineConfig } from 'vite'
 import tailwindcss from '@tailwindcss/vite'
 import react from '@vitejs/plugin-react'
+import { resolve } from 'path'
 
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react(), tailwindcss()],
   base: '/numbers-game/',
+  resolve: {
+    alias: {
+      '@': resolve(__dirname, 'src'),
+    },
+  },
   build: {
-    // Ensure source maps are generated
-    sourcemap: true,
-    // Output to the dist folder
     outDir: 'dist',
-    // Generate a manifest for better understanding of asset mapping
+    emptyOutDir: true,
+    minify: true,
+    sourcemap: true,
     manifest: true,
-    // Ensure Vite processes HTML properly
     rollupOptions: {
       input: {
-        main: './index.html',
+        main: resolve(__dirname, 'index.html'),
+      },
+      output: {
+        manualChunks: undefined,
+        entryFileNames: 'assets/[name]-[hash].js',
+        chunkFileNames: 'assets/[name]-[hash].js',
+        assetFileNames: 'assets/[name]-[hash].[ext]'
       },
     },
   },
