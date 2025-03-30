@@ -198,87 +198,112 @@ const NumberMazeGame: React.FC = () => {
     }
   };
 
-  // Win checking is now done directly in handleCellClick
-  // No need for a separate function
-
   const isCellValidMove = (row: number, col: number): boolean => {
     return validMoves.some(move => move.row === row && move.col === col);
   };
 
+  // Function to determine cell size based on viewport width
+  const getCellSize = () => {
+    // Use a responsive approach to cell sizing
+    // This will be applied as a CSS class
+    return "responsive-cell";
+  };
+
+  // Function to toggle rules visibility on mobile
+  const [showRules, setShowRules] = useState(false);
+  const toggleRules = () => {
+    setShowRules(!showRules);
+  };
+
   return (
-    <div className="flex flex-col items-center p-4 max-w-4xl mx-auto">
-      <h1 className="text-2xl font-bold mb-4">Number Maze Game</h1>
+    <div className="flex flex-col items-center p-2 sm:p-4 max-w-full mx-auto">
+      <h1 className="text-xl sm:text-2xl font-bold mb-2 sm:mb-4">Number Maze Game</h1>
       
-      <div className="mb-4 text-center">
-        <p className="mb-2">{gameStatus.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</p>
-        <p className="font-bold">Current Player: {currentPlayer} | Phase: {gamePhase === 'move' ? 'Make a move' : 'Respond to opponent'}</p>
-        <p>Player 1 is on: {board[player1Position.row]?.[player1Position.col]} | Player 2 is on: {board[player2Position.row]?.[player2Position.col]}</p>
+      <div className="mb-2 sm:mb-4 text-center w-full px-2">
+        <p className="mb-1 sm:mb-2 text-sm sm:text-base">{gameStatus.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</p>
+        <p className="font-bold text-sm sm:text-base">Current Player: {currentPlayer} | Phase: {gamePhase === 'move' ? 'Make a move' : 'Respond to opponent'}</p>
+        <p className="text-xs sm:text-sm">Player 1 is on: {board[player1Position.row]?.[player1Position.col]} | Player 2 is on: {board[player2Position.row]?.[player2Position.col]}</p>
         
         {gamePhase === 'response' && validMoves.length === 0 && !gameOver && (
           <div>
-            <p className="text-red-500 font-bold mt-2">No valid response moves available! Turn will automatically pass...</p>
+            <p className="text-red-500 font-bold mt-1 sm:mt-2 text-sm">No valid response moves available! Turn will automatically pass...</p>
           </div>
         )}
         
         {gameOver && (
           <button 
             onClick={resetGame}
-            className="mt-4 px-4 py-2 bg-green-500 text-white rounded"
+            className="mt-2 sm:mt-4 px-3 py-1 sm:px-4 sm:py-2 bg-green-500 text-white rounded text-sm sm:text-base"
           >
             Play Again
           </button>
         )}
       </div>
       
-      <div className="border-2 border-gray-300 rounded overflow-hidden">
-        {board.map((row, rowIndex) => (
-          <div key={rowIndex} className="flex">
-            {row.map((cell, colIndex) => {
-              const isPlayer1 = player1Position.row === rowIndex && player1Position.col === colIndex;
-              const isPlayer2 = player2Position.row === rowIndex && player2Position.col === colIndex;
-              const isCorner = 
-                (rowIndex === 0 && colIndex === 0) || 
-                (rowIndex === 9 && colIndex === 9);
-              const isValidMove = isCellValidMove(rowIndex, colIndex);
-              
-              return (
-                <div 
-                  key={`${rowIndex}-${colIndex}`} 
-                  className={`
-                    w-12 h-12 flex items-center justify-center relative cursor-pointer
-                    ${isValidMove && !gameOver ? 'bg-green-100' : isCorner ? 'bg-yellow-100' : ''}
-                    ${isPlayer1 && isPlayer2 ? 'border-4 border-purple-500' : 
-                      isPlayer1 ? 'border-2 border-blue-500' : 
-                      isPlayer2 ? 'border-2 border-red-500' : 
-                      'border border-gray-200'}
-                  `}
-                  onClick={() => handleCellClick(rowIndex, colIndex)}
-                >
-                  <span className={`${isPlayer1 || isPlayer2 ? 'font-bold' : ''}`}>{cell}</span>
-                  {isPlayer1 && isPlayer2 && (
-                    <div className="absolute top-0 right-0 w-3 h-3 bg-blue-500 rounded-full"></div>
-                  )}
-                  {isPlayer1 && isPlayer2 && (
-                    <div className="absolute bottom-0 left-0 w-3 h-3 bg-red-500 rounded-full"></div>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-        ))}
+      {/* Responsive game board */}
+      <div className="border-2 border-gray-300 rounded overflow-hidden max-w-full">
+        <div className="grid-board">
+          {board.map((row, rowIndex) => (
+            <div key={rowIndex} className="flex">
+              {row.map((cell, colIndex) => {
+                const isPlayer1 = player1Position.row === rowIndex && player1Position.col === colIndex;
+                const isPlayer2 = player2Position.row === rowIndex && player2Position.col === colIndex;
+                const isCorner = 
+                  (rowIndex === 0 && colIndex === 0) || 
+                  (rowIndex === 9 && colIndex === 9);
+                const isValidMove = isCellValidMove(rowIndex, colIndex);
+                
+                return (
+                  <div 
+                    key={`${rowIndex}-${colIndex}`} 
+                    className={`
+                      ${getCellSize()} flex items-center justify-center relative cursor-pointer
+                      ${isValidMove && !gameOver ? 'bg-green-100' : isCorner ? 'bg-yellow-100' : ''}
+                      ${isPlayer1 && isPlayer2 ? 'border-4 border-purple-500' : 
+                        isPlayer1 ? 'border-2 border-blue-500' : 
+                        isPlayer2 ? 'border-2 border-red-500' : 
+                        'border border-gray-200'}
+                    `}
+                    onClick={() => handleCellClick(rowIndex, colIndex)}
+                  >
+                    <span className={`${isPlayer1 || isPlayer2 ? 'font-bold' : ''} text-xs sm:text-sm`}>{cell}</span>
+                    {isPlayer1 && isPlayer2 && (
+                      <div className="absolute top-0 right-0 w-2 h-2 sm:w-3 sm:h-3 bg-blue-500 rounded-full"></div>
+                    )}
+                    {isPlayer1 && isPlayer2 && (
+                      <div className="absolute bottom-0 left-0 w-2 h-2 sm:w-3 sm:h-3 bg-red-500 rounded-full"></div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          ))}
+        </div>
       </div>
       
-      <div className="mt-4 text-sm">
-        <p><strong>Rules:</strong></p>
-        <ul className="list-disc pl-6">
-          <li>Player 1 starts at top-left, Player 2 starts at bottom-right</li>
-          <li>On your turn, click on any neighboring cell to move there</li>
-          <li>Your opponent must then move to a cell that matches the comparison (greater, equal, or less) from your move</li>
-          <li>If your opponent has no valid moves, they lose their turn completely (both response and their move)</li>
-          <li>After responding, it's your opponent's turn to move</li>
-          <li>First player to reach the opposite corner wins</li>
-        </ul>
-        <p className="text-xs text-gray-500 mt-4 text-center">Icons made by <a href="https://www.flaticon.com/authors/juicy_fish" title="juicy_fish">juicy_fish</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></p>
+      {/* Collapsible rules section for mobile */}
+      <div className="mt-2 sm:mt-4 w-full px-2">
+        <button 
+          onClick={toggleRules} 
+          className="text-sm sm:text-base w-full py-1 bg-blue-100 rounded mb-1"
+        >
+          {showRules ? "Hide Rules" : "Show Rules"}
+        </button>
+        
+        {showRules && (
+          <div className="text-xs sm:text-sm">
+            <p><strong>Rules:</strong></p>
+            <ul className="list-disc pl-4 sm:pl-6">
+              <li>Player 1 starts at top-left, Player 2 starts at bottom-right</li>
+              <li>On your turn, click on any neighboring cell to move there</li>
+              <li>Your opponent must then move to a cell that matches the comparison (greater, equal, or less) from your move</li>
+              <li>If your opponent has no valid moves, they lose their turn completely</li>
+              <li>After responding, it's your opponent's turn to move</li>
+              <li>First player to reach the opposite corner wins</li>
+            </ul>
+            <p className="text-xxs sm:text-xs text-gray-500 mt-2 sm:mt-4 text-center">Icons made by <a href="https://www.flaticon.com/authors/juicy_fish" title="juicy_fish">juicy_fish</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></p>
+          </div>
+        )}
       </div>
     </div>
   );

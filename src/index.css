@@ -62,3 +62,87 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+
+/* Mobile-first approach to responsive cell sizing */
+.responsive-cell {
+  width: calc(9vw - 2px);
+  height: calc(9vw - 2px);
+  max-width: 48px;
+  max-height: 48px;
+  min-width: 28px;
+  min-height: 28px;
+  font-size: 0.75rem;
+}
+
+/* Small screens adjustment */
+@media (max-width: 360px) {
+  .responsive-cell {
+    width: calc(8vw);
+    height: calc(8vw);
+    min-width: 24px;
+    min-height: 24px;
+    font-size: 0.7rem;
+  }
+}
+
+/* Medium screens */
+@media (min-width: 640px) {
+  .responsive-cell {
+    width: calc(6vw - 2px);
+    height: calc(6vw - 2px);
+    max-width: 48px;
+    max-height: 48px;
+    font-size: 0.875rem;
+  }
+}
+
+/* Larger screens */
+@media (min-width: 1024px) {
+  .responsive-cell {
+    width: 48px;
+    height: 48px;
+    font-size: 1rem;
+  }
+}
+
+/* Container for the grid to ensure it's centered and responsive */
+.grid-board {
+  display: flex;
+  flex-direction: column;
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+/* Add a text size smaller than xs for mobile */
+.text-xxs {
+  font-size: 0.65rem;
+  line-height: 1rem;
+}
+
+/* Ensure the board is scrollable on very small screens */
+@media (max-width: 400px) {
+  .grid-board {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+/* Ensure the app container is properly sized */
+#root {
+  width: 100%;
+  max-width: 100vw;
+  display: flex;
+  justify-content: center;
+  padding: 0.5rem;
+}
+
+/* Fix viewport issues on mobile */
+@media (max-width: 640px) {
+  body {
+    overflow-x: hidden;
+  }
+  
+  button {
+    padding: 0.4em 0.8em;
+  }
+}
