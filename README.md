@@ -4,6 +4,10 @@ A strategic two-player board game where players navigate a maze of numbers, tryi
 
 ![Numbers Maze Game Screenshot](./public/shot.png)
 
+## Demo
+
+You can play the game here: https://alirezanasseh.github.io/numbers-game/
+
 ## Overview
 
 Numbers Maze is a turn-based strategy game where players must understand number relationships and plan multiple moves ahead. The game combines elements of path-finding with the challenge of adapting to your opponent's movement patterns.
