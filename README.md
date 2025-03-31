@@ -99,8 +99,27 @@ This project is built with:
 src/
 ├── App.tsx        # Main game component
 ├── index.tsx      # Entry point
-└── assets/        # Static assets
+├── assets/        # Static assets
+└── __tests__/     # Test suite
 ```
+
+### Testing
+
+The project includes a comprehensive test suite built with Vitest and React Testing Library:
+
+```bash
+# Run all tests
+npm test
+
+# Run tests in watch mode
+npm run test:watch
+```
+
+Test coverage includes:
+- Component rendering
+- Game mechanics
+- User interactions
+- Win conditions
 
 ### Future Enhancements
 

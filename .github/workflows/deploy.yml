@@ -25,6 +25,13 @@ jobs:
       - name: Install Dependencies
         run: npm ci
 
+      - name: Run Tests
+        run: npm test
+        
+      - name: Lint Code
+        run: npm run lint
+        continue-on-error: true  # Continue even if there are linting warnings
+
       - name: Build
         run: npm run build
 
